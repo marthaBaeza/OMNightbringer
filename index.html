@@ -1,0 +1,409 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+  .omn-root {
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    font-family: 'Crimson Text', serif;
+  }
+
+  .omn-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: #0a0010;
+  }
+
+  .omn-layer {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+  }
+  .omn-layer.active { opacity: 1; }
+
+  .omn-layer-1 {
+    background: radial-gradient(ellipse at 30% 40%, #3a0050 0%, #1a0030 40%, #0a0010 100%),
+                radial-gradient(ellipse at 70% 80%, #1a0025 0%, #0a0010 60%);
+  }
+  .omn-layer-2 {
+    background: radial-gradient(ellipse at 70% 30%, #4a0020 0%, #250015 40%, #0a0010 100%),
+                radial-gradient(ellipse at 20% 70%, #200030 0%, #0a0010 60%);
+  }
+  .omn-layer-3 {
+    background: radial-gradient(ellipse at 50% 50%, #2a0045 0%, #150020 35%, #0a0010 100%),
+                radial-gradient(ellipse at 80% 20%, #3a0030 0%, #0a0010 50%);
+  }
+  .omn-layer-4 {
+    background: radial-gradient(ellipse at 20% 60%, #1a0040 0%, #100020 40%, #0a0010 100%),
+                radial-gradient(ellipse at 75% 85%, #2a001a 0%, #0a0010 55%);
+  }
+
+  .omn-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.10);
+    z-index: 1;
+  }
+
+  .omn-particles {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .omn-card {
+    position: relative;
+    z-index: 2;
+    width: 380px;
+    max-width: calc(100% - 2rem);
+    background: rgba(10, 0, 20, 0.82);
+    border: 1px solid rgba(160, 0, 220, 0.35);
+    border-radius: 2px;
+    padding: 2.5rem 2rem 2rem;
+    box-shadow: 0 0 60px rgba(120,0,200,0.18), inset 0 0 40px rgba(80,0,140,0.10);
+  }
+
+  .omn-sigil {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .omn-sigil-ring {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 0.75rem;
+    border-radius: 50%;
+    border: 1.5px solid rgba(180,0,255,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(80,0,140,0.18);
+  }
+
+  .omn-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #c084fc;
+    text-align: center;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0 0 0.15rem;
+  }
+
+  .omn-subtitle {
+    font-family: 'Crimson Text', serif;
+    font-size: 0.92rem;
+    color: rgba(200,120,255,0.55);
+    text-align: center;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0 0 2rem;
+  }
+
+  .omn-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+  }
+  .omn-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(160,0,255,0.4), transparent);
+  }
+  .omn-divider-diamond {
+    width: 6px;
+    height: 6px;
+    background: rgba(180,0,255,0.6);
+    transform: rotate(45deg);
+  }
+
+  .omn-field {
+    margin-bottom: 1.25rem;
+  }
+
+  .omn-label {
+    display: block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(200,140,255,0.7);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+  }
+
+  .omn-input-wrap {
+    position: relative;
+  }
+
+  .omn-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(30, 0, 55, 0.6);
+    border: 1px solid rgba(140, 0, 210, 0.3);
+    border-radius: 2px;
+    color: #e0c8ff;
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+    padding: 0.6rem 2.4rem 0.6rem 0.85rem;
+    outline: none;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .omn-input::placeholder { color: rgba(160,100,220,0.35); }
+  .omn-input:focus {
+    border-color: rgba(180,0,255,0.7);
+    background: rgba(50, 0, 80, 0.65);
+  }
+
+  .omn-input-icon {
+    position: absolute;
+    right: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(160,80,240,0.5);
+    font-size: 15px;
+    pointer-events: none;
+  }
+
+  .omn-eye {
+    cursor: pointer;
+    pointer-events: all !important;
+  }
+
+  .omn-remember {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 1.5rem;
+  }
+  .omn-remember input[type=checkbox] {
+    width: 14px; height: 14px;
+    accent-color: #9333ea;
+    cursor: pointer;
+  }
+  .omn-remember-label {
+    font-size: 0.88rem;
+    color: rgba(200,140,255,0.55);
+    cursor: pointer;
+  }
+
+  .omn-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #5b0096 0%, #7c0060 100%);
+    border: 1px solid rgba(180,0,255,0.45);
+    border-radius: 2px;
+    color: #f0d0ff;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 24px rgba(120,0,200,0.22);
+  }
+  .omn-btn:hover {
+    background: linear-gradient(135deg, #7200be 0%, #9c0078 100%);
+    box-shadow: 0 4px 32px rgba(160,0,255,0.32);
+  }
+  .omn-btn:active { transform: scale(0.98); }
+
+  .omn-footer {
+    margin-top: 1.4rem;
+    text-align: center;
+  }
+  .omn-footer-text {
+    font-size: 0.82rem;
+    color: rgba(180,100,240,0.4);
+    letter-spacing: 0.08em;
+  }
+  .omn-footer-link {
+    color: rgba(200,130,255,0.65);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .omn-footer-link:hover { color: #d080ff; }
+
+  .omn-msg {
+    font-family: 'Crimson Text', serif;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 2px;
+    margin-top: 0.85rem;
+    display: none;
+  }
+  .omn-msg.error {
+    display: block;
+    color: #f87171;
+    background: rgba(160,0,0,0.18);
+    border: 1px solid rgba(200,0,0,0.25);
+  }
+  .omn-msg.success {
+    display: block;
+    color: #a78bfa;
+    background: rgba(90,0,160,0.22);
+    border: 1px solid rgba(140,0,220,0.3);
+  }
+
+  .corner {
+    position: absolute;
+    width: 18px; height: 18px;
+  }
+  .corner-tl { top: -1px; left: -1px; border-top: 2px solid rgba(160,0,255,0.5); border-left: 2px solid rgba(160,0,255,0.5); }
+  .corner-tr { top: -1px; right: -1px; border-top: 2px solid rgba(160,0,255,0.5); border-right: 2px solid rgba(160,0,255,0.5); }
+  .corner-bl { bottom: -1px; left: -1px; border-bottom: 2px solid rgba(160,0,255,0.5); border-left: 2px solid rgba(160,0,255,0.5); }
+  .corner-br { bottom: -1px; right: -1px; border-bottom: 2px solid rgba(160,0,255,0.5); border-right: 2px solid rgba(160,0,255,0.5); }
+</style>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Página de inicio de sesión de OMNightbringer — aplicación temática de Obey Me</h2>
+
+<div class="omn-root">
+  <div class="omn-bg">
+    <div class="omn-layer omn-layer-1 active" id="bg0"></div>
+    <div class="omn-layer omn-layer-2" id="bg1"></div>
+    <div class="omn-layer omn-layer-3" id="bg2"></div>
+    <div class="omn-layer omn-layer-4" id="bg3"></div>
+  </div>
+  <div class="omn-overlay"></div>
+  <canvas class="omn-particles" id="particles"></canvas>
+
+  <div class="omn-card">
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div>
+    <div class="corner corner-br"></div>
+
+    <div class="omn-sigil">
+      <div class="omn-sigil-ring">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <circle cx="18" cy="18" r="14" stroke="rgba(180,0,255,0.5)" stroke-width="1"/>
+          <polygon points="18,5 21.5,14 31,14 23.5,19.5 26.5,29 18,23.5 9.5,29 12.5,19.5 5,14 14.5,14" fill="none" stroke="rgba(200,80,255,0.7)" stroke-width="1"/>
+          <circle cx="18" cy="18" r="3" fill="rgba(160,0,255,0.55)"/>
+        </svg>
+      </div>
+      <div class="omn-title">OMNightbringer</div>
+      <div class="omn-subtitle">Devildom Access Portal</div>
+    </div>
+
+    <div class="omn-divider">
+      <div class="omn-divider-line"></div>
+      <div class="omn-divider-diamond"></div>
+      <div class="omn-divider-line"></div>
+    </div>
+
+    <div class="omn-field">
+      <label class="omn-label" for="omn-user">Usuario del Pacto</label>
+      <div class="omn-input-wrap">
+        <input class="omn-input" id="omn-user" type="text" placeholder="nombre_demonio" autocomplete="off" />
+        <i class="ti ti-user omn-input-icon" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <div class="omn-field">
+      <label class="omn-label" for="omn-pass">Contraseña Sellada</label>
+      <div class="omn-input-wrap">
+        <input class="omn-input" id="omn-pass" type="password" placeholder="••••••••••••" autocomplete="off" />
+        <i class="ti ti-eye omn-input-icon omn-eye" id="eye-toggle" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <div class="omn-remember">
+      <input type="checkbox" id="omn-remember" />
+      <label class="omn-remember-label" for="omn-remember">Recordar este pacto</label>
+    </div>
+
+    <button class="omn-btn" id="omn-submit">Invocar Acceso</button>
+
+    <div class="omn-msg" id="omn-msg"></div>
+
+    <div class="omn-footer">
+      <span class="omn-footer-text">¿Olvidaste tu sello? <span class="omn-footer-link">Restaurar pacto</span></span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const layers = document.querySelectorAll('.omn-layer');
+  let cur = 0;
+  setInterval(() => {
+    layers[cur].classList.remove('active');
+    cur = (cur + 1) % layers.length;
+    layers[cur].classList.add('active');
+  }, 3500);
+
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  function resizeCanvas() {
+    const root = canvas.parentElement;
+    canvas.width = root.offsetWidth;
+    canvas.height = root.offsetHeight;
+  }
+  resizeCanvas();
+
+  const particles = Array.from({length: 38}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.5 + 0.4,
+    dx: (Math.random() - 0.5) * 0.28,
+    dy: -Math.random() * 0.45 - 0.1,
+    alpha: Math.random() * 0.5 + 0.15,
+    hue: Math.random() > 0.5 ? 280 : 320
+  }));
+
+  function animParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 100%, 75%, ${p.alpha})`;
+      ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if (p.y < -4) { p.y = canvas.height + 4; p.x = Math.random() * canvas.width; }
+      if (p.x < -4) p.x = canvas.width + 4;
+      if (p.x > canvas.width + 4) p.x = -4;
+    });
+    requestAnimationFrame(animParticles);
+  }
+  animParticles();
+
+  const eyeBtn = document.getElementById('eye-toggle');
+  const passInput = document.getElementById('omn-pass');
+  eyeBtn.addEventListener('click', () => {
+    if (passInput.type === 'password') {
+      passInput.type = 'text';
+      eyeBtn.classList.replace('ti-eye', 'ti-eye-off');
+    } else {
+      passInput.type = 'password';
+      eyeBtn.classList.replace('ti-eye-off', 'ti-eye');
+    }
+  });
+
+  const msgEl = document.getElementById('omn-msg');
+  document.getElementById('omn-submit').addEventListener('click', () => {
+    const user = document.getElementById('omn-user').value.trim();
+    const pass = document.getElementById('omn-pass').value;
+    msgEl.className = 'omn-msg';
+    if (!user || !pass) {
+      msgEl.className = 'omn-msg error';
+      msgEl.textContent = 'El pacto requiere usuario y contraseña sellada.';
+      return;
+    }
+    msgEl.className = 'omn-msg success';
+    msgEl.textContent = '✦ Verificando sello demoníaco...';
+  });
+})();
+</script>
