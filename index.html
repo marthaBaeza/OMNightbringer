@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OMNightbringer — Acceso al Devildom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0a0010;
+      font-family: 'Crimson Text', serif;
+      overflow: hidden;
+    }
+
+    /* ── Fondo animado ── */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+    }
+    .bg-layer.active { opacity: 1; }
+    .bg-layer:nth-child(1) {
+      background: radial-gradient(ellipse at 30% 40%, #3a0050 0%, #1a0030 40%, #0a0010 100%),
+                  radial-gradient(ellipse at 70% 80%, #1a0025 0%, #0a0010 60%);
+    }
+    .bg-layer:nth-child(2) {
+      background: radial-gradient(ellipse at 70% 30%, #4a0020 0%, #250015 40%, #0a0010 100%),
+                  radial-gradient(ellipse at 20% 70%, #200030 0%, #0a0010 60%);
+    }
+    .bg-layer:nth-child(3) {
+      background: radial-gradient(ellipse at 50% 50%, #2a0045 0%, #150020 35%, #0a0010 100%),
+                  radial-gradient(ellipse at 80% 20%, #3a0030 0%, #0a0010 50%);
+    }
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.12);
+      z-index: 0;
+    }
+
+    /* ── Tarjeta ── */
+    .card {
+      position: relative;
+      z-index: 2;
+      width: 400px;
+      max-width: calc(100vw - 2rem);
+      background: rgba(10, 0, 20, 0.85);
+      border: 1px solid rgba(160, 0, 220, 0.35);
+      border-radius: 2px;
+      padding: 2.5rem 2.25rem 2rem;
+      box-shadow: 0 0 60px rgba(120,0,200,0.2), inset 0 0 40px rgba(80,0,140,0.1);
+    }
+    .corner {
+      position: absolute;
+      width: 18px; height: 18px;
+    }
+    .corner-tl { top:-1px; left:-1px; border-top:2px solid rgba(160,0,255,0.5); border-left:2px solid rgba(160,0,255,0.5); }
+    .corner-tr { top:-1px; right:-1px; border-top:2px solid rgba(160,0,255,0.5); border-right:2px solid rgba(160,0,255,0.5); }
+    .corner-bl { bottom:-1px; left:-1px; border-bottom:2px solid rgba(160,0,255,0.5); border-left:2px solid rgba(160,0,255,0.5); }
+    .corner-br { bottom:-1px; right:-1px; border-bottom:2px solid rgba(160,0,255,0.5); border-right:2px solid rgba(160,0,255,0.5); }
+
+    /* ── Encabezado ── */
+    .sigil-ring {
+      width: 64px; height: 64px;
+      margin: 0 auto 0.75rem;
+      border-radius: 50%;
+      border: 1.5px solid rgba(180,0,255,0.5);
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(80,0,140,0.18);
+    }
+    .title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #c084fc;
+      text-align: center;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .subtitle {
+      font-size: 0.88rem;
+      color: rgba(200,120,255,0.5);
+      text-align: center;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin: 0.2rem 0 1.75rem;
+    }
+    .divider {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.75rem;
+    }
+    .divider-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(160,0,255,0.4), transparent);
+    }
+    .divider-diamond {
+      width: 6px; height: 6px;
+      background: rgba(180,0,255,0.6);
+      transform: rotate(45deg);
+    }
+
+    /* ── Campos ── */
+    .field { margin-bottom: 1.25rem; }
+    label {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: rgba(200,140,255,0.7);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.45rem;
+    }
+    .input-wrap { position: relative; }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      background: rgba(30, 0, 55, 0.6);
+      border: 1px solid rgba(140, 0, 210, 0.3);
+      border-radius: 2px;
+      color: #e0c8ff;
+      font-family: 'Crimson Text', serif;
+      font-size: 1rem;
+      padding: 0.6rem 2.4rem 0.6rem 0.85rem;
+      outline: none;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    input:focus {
+      border-color: rgba(180,0,255,0.7);
+      background: rgba(50, 0, 80, 0.65);
+    }
+    input::placeholder { color: rgba(160,100,220,0.35); }
+
+    /* ── Botón ── */
+    .btn {
+      width: 100%;
+      padding: 0.75rem;
+      background: linear-gradient(135deg, #5b0096, #7c0060);
+      border: 1px solid rgba(180,0,255,0.45);
+      border-radius: 2px;
+      color: #f0d0ff;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, #7200be, #9c0078);
+      box-shadow: 0 4px 32px rgba(160,0,255,0.3);
+    }
+
+    /* ── Mensajes ── */
+    .msg {
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 0.5rem;
+      border-radius: 2px;
+      margin-top: 0.85rem;
+      display: none;
+    }
+    .msg.error  { display:block; color:#f87171; background:rgba(160,0,0,0.18); border:1px solid rgba(200,0,0,0.25); }
+    .msg.success{ display:block; color:#a78bfa; background:rgba(90,0,160,0.22); border:1px solid rgba(140,0,220,0.3); }
+
+    .footer-text {
+      margin-top: 1.2rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: rgba(180,100,240,0.4);
+    }
+    .footer-text a { color: rgba(200,130,255,0.65); text-decoration: none; }
+    .footer-text a:hover { color: #d080ff; }
+
+    /* ── Modo debug ── */
+    .debug-panel {
+      margin-top: 1.5rem;
+      padding: 0.75rem;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(100,0,160,0.3);
+      border-radius: 2px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      color: rgba(200,150,255,0.7);
+    }
+    .debug-panel .debug-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: rgba(160,80,220,0.6);
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    #query-display { color: #f0c060; word-break: break-all; }
+  </style>
+</head>
+<body>
+
+  <div class="bg">
+    <div class="bg-layer active"></div>
+    <div class="bg-layer"></div>
+    <div class="bg-layer"></div>
+  </div>
+  <div class="bg-overlay"></div>
+
+  <!-- ══════════════════════════════════════════
+       CAMBIA LA ACTION SEGÚN QUÉ QUIERAS PROBAR:
+       vulnerable/login.php  → versión con SQL injection
+       seguro/login.php      → versión protegida
+  ══════════════════════════════════════════ -->
+  <form class="card" action="vulnerable/login.php" method="POST">
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div>
+    <div class="corner corner-br"></div>
+
+    <div style="text-align:center;">
+      <div class="sigil-ring">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <circle cx="18" cy="18" r="14" stroke="rgba(180,0,255,0.5)" stroke-width="1"/>
+          <polygon points="18,5 21.5,14 31,14 23.5,19.5 26.5,29 18,23.5 9.5,29 12.5,19.5 5,14 14.5,14"
+                   fill="none" stroke="rgba(200,80,255,0.7)" stroke-width="1"/>
+          <circle cx="18" cy="18" r="3" fill="rgba(160,0,255,0.55)"/>
+        </svg>
+      </div>
+      <div class="title">OMNightbringer</div>
+      <div class="subtitle">Devildom Access Portal</div>
+    </div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-diamond"></div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="field">
+      <label for="usuario">Usuario del Pacto</label>
+      <input type="text" id="usuario" name="usuario" placeholder="nombre_demonio" autocomplete="off" required />
+    </div>
+
+    <div class="field">
+      <label for="contrasena">Contraseña Sellada</label>
+      <input type="password" id="contrasena" name="contrasena" placeholder="••••••••••••" required />
+    </div>
+
+    <button type="submit" class="btn">Invocar Acceso</button>
+
+    <!-- Panel debug: muestra la query que se enviaría (solo para la práctica) -->
+    <div class="debug-panel">
+      <div class="debug-title">⚠ Panel de Práctica — Query generada:</div>
+      <div id="query-display">Escribe usuario y contraseña para ver la query...</div>
+    </div>
+
+    <div class="footer-text">
+      ¿Olvidaste tu sello? <a href="#">Restaurar pacto</a>
+    </div>
+  </form>
+
+  <script>
+    // Animación del fondo
+    const layers = document.querySelectorAll('.bg-layer');
+    let cur = 0;
+    setInterval(() => {
+      layers[cur].classList.remove('active');
+      cur = (cur + 1) % layers.length;
+      layers[cur].classList.add('active');
+    }, 3500);
+
+    // Panel debug: muestra en tiempo real cómo quedaría la query vulnerable
+    const usuarioInput = document.getElementById('usuario');
+    const passInput    = document.getElementById('contrasena');
+    const queryDisplay = document.getElementById('query-display');
+
+    function updateQuery() {
+      const u = usuarioInput.value || '';
+      const p = passInput.value   || '';
+      queryDisplay.textContent =
+        `SELECT * FROM usuarios WHERE usuario = '${u}' AND contrasena = '${p}';`;
+    }
+
+    usuarioInput.addEventListener('input', updateQuery);
+    passInput.addEventListener('input', updateQuery);
+  </script>
+</body>
+</html>
